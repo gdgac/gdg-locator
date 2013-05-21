@@ -1,0 +1,13 @@
+applications:
+  .:
+    name: gdg
+    framework:
+      name: node
+      info:
+        mem: 64M
+        description: Node.js Application
+        exec: 
+    infra: hp
+    url: ${name}.${target-base}
+    mem: 128M
+    instances: 1
