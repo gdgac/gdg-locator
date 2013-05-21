@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html itemscope itemtype="http://schema.org/Organization">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta itemprop="name" content="GDG Aachen">
+	<meta itemprop="image" content="http://gdg.hp.af.cm/images/rich_snippet_logo.png">
+	<meta name="author" content="GDG Aachen">
+	<link href="https://plus.google.com/114125193250240340259" rel="publisher" />
+	<title>GDG Locator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" media="screen" href="/css/bp.css">
+	<link rel="stylesheet" media="screen" href="/css/bootstrap.css">
+	<link rel="stylesheet" media="screen" href="/css/bootstrap-responsive.css">
+	<link rel="stylesheet" media="screen" href="/css/main.css">
+
+</head>
+<body>
+<div id="top_bar">
+    <header id="gdg_bar">
+        <a id="gdg_logo" href="/">
+            <img src="/images/gdg_logo.png" alt="Google Developer Group Aachen" class="bar_image"/>
+        </a>
+        <div id="signIn">
+            <span id="signinButton"></span>
+        </div>
+<script type="text/x-handlebars">
+        <div id="gdg_user">
+            {{view App.UserView controllerBinding="App.userController"}}
+        </div>
+    </header>
+</div>
+    <div id="nav_bar">
+        <ul>
+            <li>{{#linkTo 'dashboard'}}Dashboard{{/linkTo}}</li>
+            <li>{{#linkTo 'groups'}}Groups{{/linkTo}}</li>
+        </ul>
+    </div>
+    {{outlet}}
+</script>
+
+<script type="text/x-handlebars" id="index">
+    <div class="container">
+        <h2>GDG@I/O Beta</h2>
+        <h4>Please signin.</h4>
+        <img src="images/beta.jpg"/>
+    </div>
+</script>
+
+<script type="text/x-handlebars" id="auth">
+    {{#if email}}
+    <div><a class="email" href="#">{{email}}</a><a href="#" {{action "signOut" target="view"}}>Sign out</a></div><img width="32" height="32" class="avatar" {{bindAttr src="picture"}}>
+    {{/if}}
+</script>
+
+<script type="text/x-handlebars" id="map">
+    <div id="mapCanvas"></div>
+</script>
+
+<script type="text/x-handlebars" id="dashboard">
+    <div class="container">
+        <div class="hero-unit">
+            <h2>Howdy!</h1>
+            <p>Welcome to the GDG Locator. Be sure to get our Android App.</p>
+            <p><a href="locator.apk" class="btn btn-primary btn-large">Download APK »</a><br/><br/>><b>Interested in the GDG App (Pre-alpha)? <a href="gdg.apk" class="btn btn-primary btn-large">Download GDG App »</a></b></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" id="groups">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="span6">
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th colspan="3">Available groups</th></tr>
+                    </thead>
+                    {{#each model}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>
+                                {{#if member}}
+                                    {{#linkTo group.map _id}}<button class="btn btn-primary" type="button">Show Group</button>{{/linkTo}}</td>
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{#if member}}
+                                    {{#linkTo group.leave _id}}<button class="btn btn-primary" type="button">Leave Group</button>{{/linkTo}}
+                                {{else}}
+                                    {{#linkTo group.join _id}}<button class="btn btn-primary" type="button">Join Group</button>{{/linkTo}}
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" id="group">
+    <div class="container">
+        <div class="page-header">
+            <h1><small>{{model.name}}</small></h1>
+        </div>
+    </div>
+    {{outlet}}
+</script>
+
+<script type="text/x-handlebars" id="group/index">
+    {{outlet}}
+</script>
+
+<script type="text/x-handlebars" id="group/map">
+    {{outlet userlist}}
+    {{outlet map}}
+</script>
+
+<script type="text/x-handlebars" id="user_list">
+    <!--<div id="userList">
+        {{test}}
+    </div> -->
+    <div class="map_info">{{controllers.group.name}}</div>
+</script>
+
+<script type="text/x-handlebars" id="group/join">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="span10">
+                <p>Please enter the invitation code for this group</p>
+                {{view Ember.TextField valueBinding='invite_code'}}
+                <button {{action 'join'}} class="btn btn-primary" type="button">Join {{controllers.group.name}}</button>
+                <br/><br/>
+                <button {{action 'back'}} class="btn btn-primary" type="button">Back</button>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" id="group/leave">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="span10">
+                <p>Are you sure you want to leave this group? Other members will not be able to see your position anymore</p>
+                <button {{action 'back'}} class="btn btn-primary" type="button">Back</button>
+                <button {{action 'leave'}} class="btn btn-primary" type="button">Leave {{controllers.group.name}}</button>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" id="settings">
+    <div class="modal-header">
+        <div class="button close btn-dismiss" {{action cancel content}}>x</div>
+    <h2 class="app-icon-large">Post</h2>
+    </div>
+
+    <div class="modal-body">
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-dark" href="javascript;:" {{action cancel content}}>Cancel</a>
+        <button class="btn btn-success" type="submit" {{action submit content}}>Save</button>
+    </div>
+</script>
+
+<div id="curtain"></div>
+  <script src="js/jquery-1.9.1.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/handlebars-1.0.0-rc.3.js"></script>
+  <script src="js/ember-1.0.0-rc.3.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
